@@ -1,0 +1,19 @@
+{
+  "name": "mini-vue",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "友人A <475392583@qq.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.18.9",
+    "@babel/preset-env": "^7.18.9",
+    "@babel/preset-typescript": "^7.18.6",
+    "@rollup/plugin-typescript": "^8.3.3",
+    "@types/jest": "^28.1.6",
+    "babel-jest": "^28.1.3",
+    "jest": "^28.1.3",
+    "rollup": "^2.77.0",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4"
+  }
+}
