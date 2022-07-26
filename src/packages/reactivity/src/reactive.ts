@@ -1,5 +1,4 @@
-let activeEffect: any = null
-const effectStack: any[] = []
+import { activeEffect, type ReactiveEffect } from './effect'
 
 export function reactive(obj) {
   return new Proxy(obj, {
@@ -25,13 +24,13 @@ function track(target, key) {
   }
   let effectSet = depMap.get(key)
   if (!effectSet) {
-    effectSet = new Set()
+    effectSet = new Set<ReactiveEffect>()
     depMap.set(key, effectSet)
   }
 
   // 在依赖函数记录一下依赖集合
   if (activeEffect) {
-    activeEffect.dep = effectSet
+    activeEffect.deps.push(effectSet)
     effectSet.add(activeEffect)
   }
 }
@@ -39,17 +38,25 @@ function track(target, key) {
 function trigger(target, key) {
   const depMap = bucket.get(target)
   const effectSet = depMap.get(key)
+  // 在循环中同时给集合增加和删除元素会造成无限循环
+  const effectToRun = new Set<ReactiveEffect>()
   effectSet.forEach(effect => {
-    effect && effect()
+    if (effect !== activeEffect) {
+      effectToRun.add(effect)
+    }
+  })
+  effectToRun.forEach(effect => {
     // 对触发的依赖的依赖集合进行清空
-    effect && effect.dep.clear()
+    // 注意要先清空
+    cleanup(effect)
+    effect.run()
   })
 }
 
-export function effect(fn) {
-  activeEffect = fn
-  effectStack.push(fn)
-  fn()
-  effectStack.pop()
-  activeEffect = effectStack[effectStack.length - 1]
+function cleanup(effect) {
+  const { deps } = effect
+  deps.forEach(dep => {
+    dep.delete(effect)
+  })
+  deps.length = 0
 }

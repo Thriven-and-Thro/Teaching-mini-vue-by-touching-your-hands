@@ -66,9 +66,11 @@ describe('effect', () => {
       obj.num++
     })
 
-    expect(obj).toBe(2)
+    expect(obj.num).toBe(2)
     obj.num++
-    expect(obj).toBe(4)
+    expect(obj.num).toBe(4)
+    obj.num = 5
+    expect(obj.num).toBe(6)
   })
 
   it('实现scheduler', () => {
