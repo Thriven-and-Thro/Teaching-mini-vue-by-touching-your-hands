@@ -1,4 +1,5 @@
-let activeEffect = null
+let activeEffect: any = null
+const effectStack: any[] = []
 
 export function reactive(obj) {
   return new Proxy(obj, {
@@ -29,8 +30,10 @@ function track(target, key) {
   }
 
   // 在依赖函数记录一下依赖集合
-  if (activeEffect) activeEffect.dep = effectSet
-  effectSet.add(activeEffect)
+  if (activeEffect) {
+    activeEffect.dep = effectSet
+    effectSet.add(activeEffect)
+  }
 }
 
 function trigger(target, key) {
@@ -45,6 +48,8 @@ function trigger(target, key) {
 
 export function effect(fn) {
   activeEffect = fn
+  effectStack.push(fn)
   fn()
-  activeEffect = null
+  effectStack.pop()
+  activeEffect = effectStack[effectStack.length - 1]
 }

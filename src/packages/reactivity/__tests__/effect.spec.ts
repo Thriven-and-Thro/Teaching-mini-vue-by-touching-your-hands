@@ -56,7 +56,7 @@ describe('effect', () => {
     expect(fn2).toHaveBeenCalledTimes(2)
     obj1.num++
     // 应该都触发一次
-    expect(fn1).toHaveBeenCalledTimes(3)
+    expect(fn1).toHaveBeenCalledTimes(2)
     expect(fn2).toHaveBeenCalledTimes(3)
   })
 
