@@ -28,6 +28,8 @@ function track(target, key) {
     depMap.set(key, effectSet)
   }
 
+  // 在依赖函数记录一下依赖集合
+  if (activeEffect) activeEffect.dep = effectSet
   effectSet.add(activeEffect)
 }
 
@@ -36,6 +38,8 @@ function trigger(target, key) {
   const effectSet = depMap.get(key)
   effectSet.forEach(effect => {
     effect && effect()
+    // 对触发的依赖的依赖集合进行清空
+    effect && effect.dep.clear()
   })
 }
 
