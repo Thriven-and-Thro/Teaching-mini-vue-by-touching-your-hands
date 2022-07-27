@@ -49,7 +49,12 @@ function trigger(target, key) {
     // 对触发的依赖的依赖集合进行清空
     // 注意要先清空
     cleanup(effect)
-    effect.run()
+    if(effect.scheduler) {
+      effect.scheduler()
+    }else {
+      effect.run()
+    }
+    
   })
 }
 

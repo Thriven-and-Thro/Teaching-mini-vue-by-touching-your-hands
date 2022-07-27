@@ -88,10 +88,10 @@ describe('effect', () => {
       }
     )
 
-    expect(obj).toBe(2)
+    expect(obj.num).toBe(2)
     obj.num++
     expect(scheduler).toHaveBeenCalledTimes(1)
     runner()
-    expect(obj).toBe(3)
+    expect(obj.num).toBe(4)
   })
 })

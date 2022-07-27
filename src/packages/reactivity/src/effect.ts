@@ -3,6 +3,7 @@ const effectStack: ReactiveEffect[] = []
 
 export class ReactiveEffect<T = any> {
   public deps: Set<ReactiveEffect>[] = []
+  public scheduler?: () => any
   constructor(public fn: () => any) {}
 
   run() {
@@ -15,10 +16,14 @@ export class ReactiveEffect<T = any> {
   }
 }
 
-export function effect(fn) {
+export function effect(fn, options?) {
   activeEffect = new ReactiveEffect(fn)
+  if (options?.scheduler) {
+    activeEffect.scheduler = options.scheduler
+  }
   effectStack.push(activeEffect)
   fn()
   effectStack.pop()
   activeEffect = effectStack[effectStack.length - 1]
+  return fn
 }
